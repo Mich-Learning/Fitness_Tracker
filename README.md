@@ -1,0 +1,1 @@
+##Initial python project with the goal of calculating TDEE based on daily weight and calorie intake 
