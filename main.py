@@ -35,6 +35,12 @@ def weekly_weights(weights):
     weekly.columns = ["avg_weight_kg"]
     return weekly
 
+def weekly_runs(runs):
+    """Total distance per calendar week."""
+    weekly = runs["distance_km"].resample("W").sum().to_frame()
+    weekly.columns = ["total_km"]
+    return weekly
+
 def add_rolling_weight(df, window="7D", min_periods=4):
     df = df.copy()
     df["weight_7d"] = df["weight_kg"].rolling(window, min_periods=min_periods).mean()
