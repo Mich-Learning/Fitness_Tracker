@@ -52,6 +52,19 @@ def merge_weekly(weekly_w, weekly_r):
     )
     return combined
 
+def correlate(combined):
+    """Compute correlation between weekly avg weight and total km."""
+    valid = combined.dropna(subset=["avg_weight_kg", "total_km"])
+
+    if len(valid) < 3:
+        print("Not enough complete weeks to compute correlation.")
+        return None
+
+    corr = valid["avg_weight_kg"].corr(valid["total_km"])
+    print(f"Weeks analyzed: {len(valid)}")
+    print(f"Correlation (weight vs. km): {corr:+.2f}")
+    return corr
+
 def add_rolling_weight(df, window="7D", min_periods=4):
     df = df.copy()
     df["weight_7d"] = df["weight_kg"].rolling(window, min_periods=min_periods).mean()
