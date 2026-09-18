@@ -41,6 +41,17 @@ def weekly_runs(runs):
     weekly.columns = ["total_km"]
     return weekly
 
+def merge_weekly(weekly_w, weekly_r):
+    """Join weekly weights and weekly runs on their week index."""
+    combined = pd.merge(
+        weekly_w,
+        weekly_r,
+        left_index=True,
+        right_index=True,
+        how="outer",
+    )
+    return combined
+
 def add_rolling_weight(df, window="7D", min_periods=4):
     df = df.copy()
     df["weight_7d"] = df["weight_kg"].rolling(window, min_periods=min_periods).mean()
