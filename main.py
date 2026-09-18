@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 
 DATA_PATH = Path("Data/raw/weight_calories_raw.csv")
+RUNS_PATH = Path("Data/raw/runs_raw.csv")
 
 COLUMN_RENAME = {
     "Date": "date",
@@ -18,6 +19,12 @@ COLUMN_RENAME = {
 def load_weights(path):
     df = pd.read_csv(path)
     df = df.rename(columns=COLUMN_RENAME)
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.set_index("date").asfreq("D")
+    return df
+
+def load_runs(path):
+    df = pd.read_csv(path)
     df["date"] = pd.to_datetime(df["date"])
     df = df.set_index("date").asfreq("D")
     return df
