@@ -15,7 +15,7 @@ COLUMN_RENAME = {
     "Weight (KG)": "weight_kg",
 }
 
-def load_data(path):
+def load_weights(path):
     df = pd.read_csv(path)
     df = df.rename(columns=COLUMN_RENAME)
     df["date"] = pd.to_datetime(df["date"])
@@ -61,7 +61,7 @@ def plot_weight(df, out_path="weight_trend.png"):
 
 
 def main():
-    df = load_data(DATA_PATH)
+    df = load_weights(DATA_PATH)
     df = add_rolling_weight(df)
 
     print(f"Date range: {df.index.min().date()} -> {df.index.max().date()}")
