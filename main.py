@@ -104,23 +104,40 @@ def plot_weight(df, out_path="weight_trend.png"):
 
 
 def main():
-    df = load_weights(DATA_PATH)
-    df = add_rolling_weight(df)
+    # --- Weight/TDEE analysis (existing) ---
+    weights = load_weights(DATA_PATH)
+    weights = add_rolling_weight(weights)
 
-    print(f"Date range: {df.index.min().date()} -> {df.index.max().date()}")
-    print(f"Days: {len(df)}")
-    print(f"Weigh-in completeness: {completeness(df):.1%}")
+    print(f"Date range: {weights.index.min().date()} -> {weights.index.max().date()}")
+    print(f"Days: {len(weights)}")
+    print(f"Weigh-in completeness: {completeness(weights):.1%}")
     print()
 
-    tdee, weighins = estimate_tdee(df, window_days=14)
+    tdee, weighins = estimate_tdee(weights, window_days=14)
     print("--- TDEE (last 14 days) ---")
     print(f"Weigh-ins in window: {weighins}")
     if tdee is None:
         print("Insufficient data for a TDEE estimate.")
     else:
         print(f"Estimated TDEE: {tdee:,.0f} cal/day (LOW confidence)")
+    print()
 
-    plot_weight(df)
+    # --- NEW: Running correlation analysis ---
+    runs = load_runs(RUNS_PATH)
+
+    weekly_w = weekly_weights(weights)
+    weekly_r = weekly_runs(runs)
+    combined = merge_weekly(weekly_w, weekly_r)
+
+    print("--- Weekly summary ---")
+    print(combined)
+    print()
+
+    print("--- Correlation (weight vs. running) ---")
+    correlate(combined)
+
+    # --- Chart ---
+    plot_weight(weights)
     print("\nSaved weight_trend.png")
 
 
